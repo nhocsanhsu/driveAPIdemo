@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "440716091515",
+    "project_id": "driveapidemo-6a171"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440716091515:android:0007446a06d2c4d9",
+        "android_client_info": {
+          "package_name": "com.example.admin.driveapidemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440716091515-9ale6iaklg1135tp1ik47kbmu4bib0g0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.admin.driveapidemo",
+            "certificate_hash": "8ae4a80f60177b6f1fbffe2fe8b73e31d6cd3efc"
+          }
+        },
+        {
+          "client_id": "440716091515-0j5iucre7p31i6bo5gvtopqtbf01dpg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnlk3oXE_n0k6X8M2mH5uJZHxDOp9DjOc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
