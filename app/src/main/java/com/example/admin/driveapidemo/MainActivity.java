@@ -118,9 +118,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        mDriveClient = Drive.getDriveClient(getApplicationContext(),account);
-        mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(),account);
+        //GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        //mDriveClient = Drive.getDriveClient(getApplicationContext(),account);
+        //mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(),account);
     }
     //First Call When Sign In
     private void signIn() {
