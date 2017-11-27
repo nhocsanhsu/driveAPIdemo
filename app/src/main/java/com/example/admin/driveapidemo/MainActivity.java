@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     private static final int REQUEST_CODE_CREATE_FILE = 200;
     private static final int REQUEST_CODE_OPEN_ITEM = 300;
-    public static String extra_link = "link";
+    public static String extra_image = "image";
     public static String extra_title = "title";
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
     TextView tvTextFile;
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     DriveClient mDriveClient;
     DriveFolder mDriveFolder;
     Metadata mMetadata;
+    MediaPlayer mp = new MediaPlayer();
     //private DataBufferAdapter<Metadata> mResultsAdapter;
     //ListView mListView = findViewById(R.id.listViewResults);
     String TAG = "OnActivity ";
@@ -141,7 +142,21 @@ public class MainActivity extends AppCompatActivity {
             case RC_SIGN_IN:
                 Log.i(TAG, "Result");
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                handleSignInResult(task);
+                task.addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
+                    @Override
+                    public void onSuccess(GoogleSignInAccount account) {
+                        Log.w(TAG,"sigInResult: Success");
+                        mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
+                        mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), account);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "signInResult:failed ");
+                        finish();
+                    }
+                });
+                //handleSignInResult(task);
                 break;
             case REQUEST_CODE_OPEN_ITEM:
                 if (resultCode == RESULT_OK) {
@@ -149,14 +164,6 @@ public class MainActivity extends AppCompatActivity {
                             OpenFileActivityOptions.EXTRA_RESPONSE_DRIVE_ID);
                     mOpenItemTaskSource.setResult(driveId);
                 }
-        }
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Log.i(TAG, "Result");
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
         }
     }
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -231,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(getApplicationContext(),"Signed Out",Toast.LENGTH_LONG).show();
                 Log.w(TAG, "SignOut Success!");
             }
         });
@@ -327,7 +335,6 @@ public class MainActivity extends AppCompatActivity {
                         DriveContents contents = task.getResult();
                         InputStream inputStream =  contents.getInputStream();
                         String mimetype = mMetadata.getMimeType().toString();
-
                         if(mimetype.equals("audio/mp3") ) {
                             try {
                                 File tempFile = createTempFile("tempFile", ".dat", getDir("filez", 0));
@@ -339,7 +346,6 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 out.close();
                                 String path = tempFile.getAbsolutePath();
-                                MediaPlayer mp = new MediaPlayer();
                                 mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                 mp.setDataSource(path);
                                 mp.prepare();
@@ -350,8 +356,8 @@ public class MainActivity extends AppCompatActivity {
                         else if((mimetype.equals("image/jpeg"))||(mimetype.equals("image/png"))) {
                             try {
                                 Bitmap img = BitmapFactory.decodeStream(inputStream);
-                                imgView.setVisibility(View.VISIBLE);
                                 imgView.setImageBitmap(img);
+                                mp.stop();
                             } catch (Exception e) {
                             }
                         }
@@ -368,8 +374,10 @@ public class MainActivity extends AppCompatActivity {
                                     builder.append(line).append("\n");
                                 }
                                 // showMessage(getString(R.string.content_loaded));
+                                imgView.setVisibility(View.INVISIBLE);
                                 tvTextFile.setVisibility(View.VISIBLE);
                                 tvTextFile.setText(builder.toString());
+                                mp.stop();
                                 //finish();
                             }
                         }
@@ -458,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 //showMessage(getString(R.string.file_deleted));
                                 Log.w(TAG,"Deleted file");
-                                Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_LONG).show();
                                 //finish();
                             }
                         })
@@ -474,24 +482,12 @@ public class MainActivity extends AppCompatActivity {
     }
     //Call when Selected A File
 
-    public void viewImage(String link, String title)
+    public void viewImage(Bitmap img, String title)
     {
-//        webView.setVisibility(View.VISIBLE);
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        webView.loadUrl(link);
-//        Uri uri = Uri.parse(link);
-//        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-//        mDriveClient.requestSync();
+//        Intent intent = new Intent(getApplicationContext(),ImageViewer.class);
+//        intent.putExtra(extra_link,img);
+//        intent.putExtra(extra_title,title);
 //        startActivity(intent);
-//        try {
-//            URL url = new URL(link);
-//            Bitmap img = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//            imgView.setImageBitmap(img);
-//        }
-//        catch (Exception e)
-//        {
-//
-//        }
     }
     private void playMusic(String link, String title)
     {

@@ -22,12 +22,12 @@ public class ImageViewer extends Activity {
         setContentView(R.layout.image_viewer);
         imgViewer = (ImageView)findViewById(R.id.imgViewer);
         Intent intent = getIntent();
-        String link = intent.getStringExtra(MainActivity.extra_link);
+        //Bitmap image = intent.getExtras().get
         String title = intent.getStringExtra(MainActivity.extra_title);
         try {
-            URL url = new URL(link);
-            Bitmap img = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            imgViewer.setImageBitmap(img);
+            //URL url = new URL(link);
+            //Bitmap img = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            //imgViewer.setImageBitmap(img);
         }
         catch (Exception e)
         {
